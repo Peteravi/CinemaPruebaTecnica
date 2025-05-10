@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales opcionales */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    @apply bg-gray-100 text-gray-900;
+}
+
+h1, h2, h3, h4 {
+    @apply font-bold;
+}
+
+table {
+    @apply w-full border-collapse;
+}
+
+th, td {
+    @apply border px-3 py-2 text-sm;
+}
+
+button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}

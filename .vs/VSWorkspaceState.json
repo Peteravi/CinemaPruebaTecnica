@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Cinema",
+    "\\Cinema\\frontend",
+    "\\Cinema\\frontend\\public",
+    "\\Cinema\\frontend\\src",
+    "\\Cinema\\frontend\\src\\components",
+    "\\Cinema\\frontend\\src\\routes",
+    "\\Cinema\\frontend\\src\\services"
+  ],
+  "SelectedNode": "\\Cinema\\frontend\\package.json",
+  "PreviewInSolutionExplorer": false
+}

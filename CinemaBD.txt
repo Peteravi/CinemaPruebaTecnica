@@ -1,0 +1,117 @@
+-- Tabla de clientes
+CREATE TABLE clientes (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- Tabla de películas
+CREATE TABLE peliculas (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    genero VARCHAR(50) NOT NULL
+);
+
+-- Tabla de salas
+CREATE TABLE salas (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
+);
+
+-- Tabla de butacas
+CREATE TABLE butacas (
+    id SERIAL PRIMARY KEY,
+    numero INT NOT NULL,
+    fila VARCHAR(10),
+    sala_id INT REFERENCES salas(id),
+    estado BOOLEAN DEFAULT TRUE -- TRUE = disponible, FALSE = inhabilitada
+);
+
+-- Tabla de cartelera (funciones de películas en una sala y fecha/hora específica)
+CREATE TABLE cartelera (
+    id SERIAL PRIMARY KEY,
+    pelicula_id INT REFERENCES peliculas(id),
+    sala_id INT REFERENCES salas(id),
+    fecha_funcion DATE NOT NULL,
+    hora_funcion TIME NOT NULL,
+    estado BOOLEAN DEFAULT TRUE -- TRUE = activa, FALSE = cancelada
+);
+
+-- Tabla de reservas
+CREATE TABLE reservas (
+    id SERIAL PRIMARY KEY,
+    cliente_id INT REFERENCES clientes(id),
+    cartelera_id INT REFERENCES cartelera(id),
+    butaca_id INT REFERENCES butacas(id),
+    fecha_reserva TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(20) DEFAULT 'activa' -- activa, cancelada
+); 
+
+-- Insertar clientes
+INSERT INTO clientes (nombre, correo) VALUES
+('Juan Pérez', 'juanperez@gmail.com'),
+('Ana Torres', 'ana.torres@hotmail.com'),
+('Luis Gómez', 'luisgomez@yahoo.com');
+
+-- Insertar películas
+INSERT INTO peliculas (titulo, genero) VALUES
+('La Noche del Terror', 'Terror'),
+('El Viaje Mágico', 'Aventura'),
+('Terror en la Montaña', 'Terror'),
+('Amor Imposible', 'Romance');
+
+-- Insertar salas
+INSERT INTO salas (nombre) VALUES
+('Sala 1'),
+('Sala 2');
+
+-- Insertar butacas para ambas salas
+-- Sala 1: 5 butacas
+INSERT INTO butacas (numero, fila, sala_id) VALUES
+(1, 'A', 1),
+(2, 'A', 1),
+(3, 'B', 1),
+(4, 'B', 1),
+(5, 'C', 1);
+
+-- Sala 2: 5 butacas
+INSERT INTO butacas (numero, fila, sala_id) VALUES
+(1, 'A', 2),
+(2, 'A', 2),
+(3, 'B', 2),
+(4, 'B', 2),
+(5, 'C', 2);
+
+-- Insertar cartelera (funciones)
+INSERT INTO cartelera (pelicula_id, sala_id, fecha_funcion, hora_funcion) VALUES
+(1, 1, CURRENT_DATE, '20:00'),  -- Terror
+(2, 1, CURRENT_DATE, '18:00'),  -- Aventura
+(3, 2, CURRENT_DATE + INTERVAL '1 day', '22:00'),  -- Terror (mañana)
+(4, 2, CURRENT_DATE - INTERVAL '1 day', '16:00'); -- Romance (ayer, para prueba de cancelación inválida)
+
+-- Insertar reservas
+INSERT INTO reservas (cliente_id, cartelera_id, butaca_id, estado) VALUES
+(1, 1, 1, 'activa'),
+(2, 1, 2, 'activa'),
+(3, 3, 6, 'activa'),
+(1, 4, 7, 'activa'); -- función del pasado
+
+-- Inhabilitar una butaca (ejemplo)
+UPDATE butacas SET estado = FALSE WHERE id = 7; -- butaca usada en función pasada
+
+
+src/
+├── components/
+│   ├── AdminButaca.tsx
+│   ├── AdminCartelera.tsx
+│   └── ReservationList.tsx
+├── context/
+│   └── ReservationContext.tsx
+├── services/
+│   └── reservationService.ts
+├── routes/
+│   └── AppRouter.tsx
+├── App.tsx
+├── main.tsx
+└── index.css  // Tailwind aquí
+
